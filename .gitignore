@@ -136,3 +136,11 @@ Temporary Items
 
 * Additional
 configdo.sh
+secrets.sh
+configpi.sh
+pi/*
+/pi
+/pi/*
+
+
+
