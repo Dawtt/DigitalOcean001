@@ -5,8 +5,8 @@ clear
 
 
 #####     VARIABLES & PATHS
-LOCAL_ROOT=$(pwd)
-source files.sh
+LOCAL_ROOT='/Users/dw/Dropbox/GitHub/DigitalOcean001/transferFilesScript'
+source ${LOCAL_ROOT}/files.sh
 
 ###     COPY TYPE
 COPY_FILES=true # copies only specified files
@@ -86,12 +86,12 @@ if ${COPY_FILES}; then
     if [[ ${TRANSFER_TYPE} = "GET" ]]; then
         for fileName in "${FILES_LIST[@]}"
             do
-                scp ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName} ${LOCAL_ROOT}${fileName}
+                scp ${REMOTE_PORT} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName} ${LOCAL_ROOT}${fileName}
         done
     elif [[ ${TRANSFER_TYPE} = "PUSH" ]]; then
         for fileName in "${FILES_LIST[@]}"
             do
-                scp ${LOCAL_ROOT}${SCP_FILE} ${REMOTE_USERNAME}@${REMOTE_HOST}:${SCP_FILE}}
+                scp ${REMOTE_PORT} ${LOCAL_ROOT}${fileName} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName}
         done
     fi
 fi
