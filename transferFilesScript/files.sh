@@ -10,7 +10,8 @@ FILES_LIST=("/etc/apache2/apache2.conf"
 "/var/lib/tomcat8/conf/server.xml"
 "/var/lib/tomcat8/conf/catalina.properties"
 "/var/lib/tomcat8/conf/tomcat-users.xml"
-"/var/lib/tomcat8/conf/web.xml")
+"/var/lib/tomcat8/conf/web.xml"
+"/var/lib/tomcat8/webapps/sample.war")
 
 ###     DIRECTORIES REQUIRED FOR FILE CREATION ARRAY
 DIRECTORIES=("/etc/apache2/"
@@ -18,6 +19,7 @@ DIRECTORIES=("/etc/apache2/"
 "/etc/apache2/sites-enabled/"
 "/etc/libapache2-mod-jk/"
 "/etc/apache2/mods-available"
+"/var/lib/tomcat8/webapps"
 "/var/lib/tomcat8/conf/")
 
 ###     DIRECTORIES FOR RECURSIVE COPY OPTION ARRAY
