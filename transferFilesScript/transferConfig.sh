@@ -61,7 +61,7 @@ printf "########################################################################
 printf "\n\n"
 printf " %10s Script Settings:\n"
 printf " Local root directory:\n%10s $LOCAL_ROOT\n"
-printf " List of files to copy from remote server:\n"
+printf " List of files to copy:\n"
 # printf ${FILES_LIST[@]}
 for fileName in "${FILES_LIST[@]}"
     do
