@@ -2,7 +2,8 @@
 
 
 ###     FILES TO BE COPIED ARRAY
-FILES_LIST=("/etc/apache2/apache2.conf"
+FILES_LIST=(
+"/etc/apache2/apache2.conf"
 "/etc/apache2/sites-available/000-default.conf"
 "/etc/apache2/sites-enabled/000-default.conf"
 "/etc/apache2/mods-available/jk.conf"
@@ -15,19 +16,24 @@ FILES_LIST=("/etc/apache2/apache2.conf"
 "/var/lib/tomcat8/conf/web.xml"
 "/var/lib/tomcat8/conf/logging.properties"
 "/var/lib/tomcat8/conf/context.xml"
-"/var/lib/tomcat8/webapps/sample.war")
+)
 
 ###     DIRECTORIES REQUIRED FOR FILE CREATION ARRAY
-DIRECTORIES=("/etc/apache2/"
-"/etc/apache2/sites-available/"
-"/etc/apache2/sites-enabled/"
-"/etc/libapache2-mod-jk/"
+DIRECTORIES=(
+"/etc/apache2"
+"/etc/apache2/sites-available"
+"/etc/apache2/sites-enabled"
 "/etc/apache2/mods-available"
-"/var/lib/tomcat8/webapps"
-"/var/lib/tomcat8/conf/"
-"/etc/trafficserver/")
+"/etc/libapache2-mod-jk"
+"/etc/trafficserver"
+"/var/lib/tomcat8/conf"
+)
+
 
 ###     DIRECTORIES FOR RECURSIVE COPY OPTION ARRAY
-DIRECTORIES_RECURSIVE_COPY_LIST=("/etc/apache2/"
-"/etc/libapache2-mod-jk/"
-"/var/lib/tomcat8/conf/")
+DIRECTORIES_RECURSIVE_COPY_LIST=(
+"/etc/apache2"
+"/etc/libapache2-mod-jk"
+"/var/lib/tomcat8/conf"
+"/etc/trafficserver/*.config"
+)

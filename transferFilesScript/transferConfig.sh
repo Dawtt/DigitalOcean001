@@ -10,6 +10,7 @@ source ${LOCAL_ROOT}/files.sh
 
 ###     COPY TYPE
 COPY_FILES=true # copies only specified files
+CORRECT_PERMISSIONS=true
 COPY_DIRECTORIES_RECURSIVELY=false # UNFINISHED!!! copies all files in recursive specified directories
 
 ###     TRANSFER & REMOTE TYPE
@@ -18,9 +19,10 @@ REMOTE_CONFIG=
 SCP_COMMAND=
 SCP_FILE=
 INTRO=
+ONLY_FIX_PERMISSIONS=false
 
 if [[ "$1" = "" ]]; then
-        echo "required parameters: -G or -P, -p or -b."
+        echo "required parameters: -G or -P, -p or -b. -fp for fix permissions only"
         echo "terminating script."
         exit 1
 fi
@@ -35,6 +37,8 @@ while [[ "$1" != "" ]]; do    # Thanks http://linuxcommand.org/lc3_wss0120.php f
                                 ;;
         -b | --belly )          REMOTE_CONFIG="configdo.sh"
                                 ;;
+        -fp | --fixpermissions )ONLY_FIX_PERMISSIONS=true
+                                ;;
         * )                     #usage
                                 exit 1
     esac
@@ -43,6 +47,15 @@ done
 
 
 source ${LOCAL_ROOT}/${REMOTE_CONFIG}
+
+if ${ONLY_FIX_PERMISSIONS}; then
+    set -x
+    for command in "${PERMISSIONS_COMMANDS[@]}"
+        do
+            ssh ${REMOTE_PORT_SSH} ${REMOTE_USERNAME}@${REMOTE_HOST} ${command}
+    done
+    exit 1
+fi
 
 printf "configuration file will be:\n%5s${LOCAL_ROOT}/${REMOTE_CONFIG}.\n\n press <ENTER> to continue.\n\n"
 read waitforuser
@@ -73,27 +86,39 @@ read -n1 -r button
 
 set -x # Display the following bash commands in user terminal
 
-# for GET, make sure directory structure exists locally.
-if [[ ${TRANSFER_TYPE} = "GET" ]]; then
-    for directory in ${DIRECTORIES[@]} # create directories needed.
-        do
-            mkdir -p ${LOCAL_ROOT}${directory} # -p blocks notification if already exist.
-    done
-fi
+#if [[ ${TRANSFER_TYPE} = "GET" ]]; then
+#    for directory in ${DIRECTORIES[@]} # create directories needed.
+#        do
+#            mkdir -p ${LOCAL_ROOT}${directory} # -p blocks notification if already exist.
+#    done
+#fi
 
 # perform the file transfers.
 if ${COPY_FILES}; then
     if [[ ${TRANSFER_TYPE} = "GET" ]]; then
+        for directory in "${DIRECTORIES[@]}"
+            do  # for GET, make sure directory structure exists locally.
+                mkdir -p ${LOCAL_ROOT}${directory} # -p blocks notification if already exist.
+        done
         for fileName in "${FILES_LIST[@]}"
             do
-                scp ${REMOTE_PORT} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName} ${LOCAL_ROOT}${fileName}
+                rsync -a ${REMOTE_PORT} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName} ${LOCAL_ROOT}${fileName}
         done
+
+
     elif [[ ${TRANSFER_TYPE} = "PUSH" ]]; then
         for fileName in "${FILES_LIST[@]}"
             do
-                scp ${REMOTE_PORT} ${LOCAL_ROOT}${fileName} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName}
+                rsync -a ${REMOTE_PORT_RSYNC} ${LOCAL_ROOT}${fileName} ${REMOTE_USERNAME}@${REMOTE_HOST}:${fileName}
         done
     fi
+    # set needed permissions
+#    if  ${CORRECT_PERMISSIONS}; then
+#        for command in "${PERMISSIONS_COMMANDS[@]}"
+#            do
+#                ssh ${REMOTE_PORT_SSH} ${REMOTE_USERNAME}@${REMOTE_HOST} ${command}
+#        done
+#    fi
 fi
 
 # copying all contents of directories list
@@ -108,6 +133,7 @@ if ${COPY_DIRECTORIES_RECURSIVELY}; then
             scp ${SCP_COMMAND}
     done
 fi
+
 
 set +x # stop displaying bash commands in user terminal.
 ###         END SCRIPT

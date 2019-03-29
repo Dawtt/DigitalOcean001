@@ -1,6 +1,7 @@
 #Status Checks & Logging
 * `sudo tail -F /var/log/apache2/error.log /var/log/apache2/mod_jk.log /var/log/apache2/access.log /var/lib/tomcat8/logs/catalina.out /var/log/trafficserver/traffic.out /var/log/trafficserver/diags.log /var/log/trafficserver/error.log /var/log/trafficserver/manager.log`
 * `| grep --color=always catalina\|tomcat\|mod_jk` add to filter for lines containing catalina or tomcat & color them
+* `| grep --color=always -E "$|tomcat"`
 * `sudo systemctl status tomcat8`
 * `sudo systemctl status apache2`
 * `sudo service tomcat8 restart && sudo service apache2 restart`
@@ -9,6 +10,10 @@
 * `ps aux | grep catalina`  Get ${CATALINA_HOME}
 * `/usr/share/tomcat8/bin$ sh version.sh` get version
 * `/usr/share/tomcat8/lib$ java -cp catalina.jar org.apache.catalina.util.ServerInfo` get tomcat version
+## Permissions
+* `/var/lib/tomcat8/conf/`  
+  * files owned by root, group tomcat8
+  * 775
 
 
 ## Paths
@@ -26,16 +31,16 @@
 * 
 
 #Apache2
+* `sites-available` is the one to edit. `sites-enabled` should simlink to correct sites in `sites-enabled`.
+* `sudo nano /etc/apache2/sites-enabled/000-default.conf`
 * `sudo nano /etc/apache2/sites-available/000-default.conf`
 * `sudo nano /etc/apache2/apache2.conf`
 * `sudo nano /etc/apache2/mods-available/jk.conf`
 * 
 
-##Notes
+#Tomcat
 * `httpd.conf` on debian is `apache2.conf`
-* `sites-available` is the one to edit. `sites-enabled` should simlink to correct sites in `sites-enabled`.
-* `sudo nano /etc/apache2/sites-enabled/000-default.conf`
-* 
+
 
 #Traffic Server
 
@@ -47,4 +52,5 @@
 * `cut -d : -f 1 /etc/passwd` list all users
 * `cut -d : -f 1 /etc/group` list all groups
 * `sudo find / -type d -user $USER -perm /u=w` find writable directories for user $USER
-* `sudo chown -R tomcat8:tomcat8 /home/jack/public_html/`
+* `sudo chown -R tomcat8:tomcat8 /var/lib/tomcat8/conf/*`
+* `dpkg -l|grep tomcat` show all packages related to tomcat
